@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Click Data</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    /* Add custom styles here */
+  </style>
+</head>
+<body>
+  <div class="container mt-5">
+    <h1>Click Data</h1>
+    <button id="clickBtn" class="btn btn-primary">Click Me</button>
+  </div>
+
+  <!-- Load the socket.io-client library -->
+  <script src="https://cdn.socket.io/4.3.1/socket.io.min.js"></script>
+
+  <script>
+    const socket = io('http://localhost:3000', { transports : ['websocket'] });
+
+    document.getElementById('clickBtn').addEventListener('click', () => {
+      const data = {
+        tag: 'button',
+        text: 'Click Me',
+        id: 'clickBtn',
+        class: 'btn btn-primary',
+        headers: Object.fromEntries([...new Headers(window.navigator).entries()]), // Convert Headers to object
+        localStorageData: getLocalStorageData(),
+      };
+
+      // Emit data to the server
+      socket.emit('clickData', data);
+    });
+
+    function getLocalStorageData() {
+      const data = {};
+
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        const value = localStorage.getItem(key);
+        data[key] = value;
+      }
+
+      return data;
+    }
+  </script>
+</body>
+</html>
+
