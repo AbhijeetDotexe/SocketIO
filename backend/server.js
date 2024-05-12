@@ -10,13 +10,13 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 
-// Enable CORS for all origins
+
 app.use(cors());
 
-// Serve the frontend files
+
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Set up routes
+
 app.use('/api', routes(io));
 
 const port = process.env.PORT || 3000;

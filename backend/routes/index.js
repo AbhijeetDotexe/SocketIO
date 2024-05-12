@@ -7,10 +7,10 @@ module.exports = (io) => {
   io.on('connection', (socket) => {
     console.log('A user connected');
 
-    // Event listener for clickData event
     socket.on('clickData', (data) => {
       console.log('Received click data:', data);
-      clickDataController.saveClickData(data);
+      const req = socket.request; // Get the request object from the socket
+      clickDataController.saveClickData(data, req);
     });
   });
 
