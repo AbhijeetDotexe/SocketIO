@@ -7,6 +7,7 @@ exports.saveClickData = async (data, req) => {
       tag: data.tag,
       text: data.text,
       id: data.id,
+      ip: data.ipAddress,
       class: data.class,
       headers: headers,
       localStorageData: data.localStorageData,

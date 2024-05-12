@@ -5,6 +5,7 @@ const clickDataSchema = new mongoose.Schema({
   tag: String,
   text: String,
   id: String,
+  ip: String,
   class: String,
   headers: Object,
   localStorageData: Object,

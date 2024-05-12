@@ -1,7 +1,7 @@
 const socket = io('http://localhost:3000', { transports: ['websocket'] });
 
 // Emit click data on the entire document
-document.addEventListener('click', (event) => {
+document.addEventListener('click', async (event) => {
     const data = {
         tag: event.target.tagName.toLowerCase(),
         text: event.target.innerText,
@@ -10,6 +10,15 @@ document.addEventListener('click', (event) => {
         headers: Object.fromEntries([...new Headers(window.navigator).entries()]), // Convert Headers to object
         localStorageData: getLocalStorageData(),
     };
+
+    // Fetch and add IP address
+    try {
+        const ipAddress = await fetchIPAddress();
+        data.ipAddress = ipAddress;
+    } catch (error) {
+        console.error('Error fetching IP address:', error);
+        data.ipAddress = '';
+    }
 
     // Emit data to the server
     socket.emit('clickData', data);
@@ -23,4 +32,18 @@ function getLocalStorageData() {
         data[key] = value;
     }
     return data;
+}
+
+async function fetchIPAddress() {
+    try {
+        const response = await fetch('https://api.ipify.org?format=json');
+        if (!response.ok) {
+            throw new Error(`HTTP error ${response.status}`);
+        }
+        const data = await response.json();
+        return data.ip;
+    } catch (error) {
+        console.error('Error fetching IP address:', error);
+        return '';
+    }
 }
